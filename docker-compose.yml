@@ -117,7 +117,7 @@ services:
       - KV_HOST=redis
       - KV_PORT=6379
     entrypoint: ["/app/entrypoint.sh"]
-    command: sh -c "zou init-db && zou init-data"
+    command: sh -c "zou init-db && zou init-data && zou reset-search-index"
     depends_on:
       postgres:
         condition: service_healthy
