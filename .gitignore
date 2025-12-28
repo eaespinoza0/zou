@@ -101,3 +101,9 @@ restore.sh
 
 # Meilisearch folder
 data.ms
+
+.venv/
+
+# Secrets directory
+secrets/*.txt
+!secrets/*.example
