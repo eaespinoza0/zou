@@ -179,8 +179,8 @@ services:
     restart: unless-stopped
     secrets:
       - indexer_key
+    entrypoint: ["/bin/sh", "-c", "export MEILI_MASTER_KEY=$(cat /run/secrets/indexer_key) && exec meilisearch"]
     environment:
-      - MEILI_MASTER_KEY_FILE=/run/secrets/indexer_key
       - MEILI_ENV=production
       - MEILI_NO_ANALYTICS=true
     volumes:

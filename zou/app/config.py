@@ -72,7 +72,7 @@ PREVIEW_SAVE_SOURCE_FILE = envtobool("PREVIEW_SAVE_SOURCE_FILE", False)
 TMP_DIR = os.getenv("TMP_DIR", os.path.join(tempfile.gettempdir(), "zou"))
 
 EVENT_STREAM_HOST = os.getenv("EVENT_STREAM_HOST", "localhost")
-EVENT_STREAM_PORT = os.getenv("EVENT_STREAM_PORT", 5001)
+EVENT_STREAM_PORT = int(os.getenv("EVENT_STREAM_PORT", 5001))
 EVENT_HANDLERS_FOLDER = os.getenv(
     "EVENT_HANDLERS_FOLDER", os.path.join(os.getcwd(), "event_handlers")
 )
