@@ -109,6 +109,7 @@ services:
     container_name: zou-init
     secrets:
       - db_password
+      - indexer_key
     environment:
       - DB_HOST=postgres
       - DB_PORT=5432
@@ -116,8 +117,10 @@ services:
       - DB_DATABASE=${DB_DATABASE:-zoudb}
       - KV_HOST=redis
       - KV_PORT=6379
+      - INDEXER_HOST=${INDEXER_HOST:-meilisearch}
+      - INDEXER_PORT=${INDEXER_PORT:-7700}
     entrypoint: ["/app/entrypoint.sh"]
-    command: sh -c "zou init-db && zou init-data && zou reset-search-index"
+    command: sh -c "zou init-db && zou init-data && (zou reset-search-index || echo 'Search index skipped (Meilisearch not available)')"
     depends_on:
       postgres:
         condition: service_healthy
