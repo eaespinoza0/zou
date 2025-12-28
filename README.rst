@@ -41,7 +41,9 @@ Quick Start (Docker)
 
     # Optional (create empty if not using)
     touch secrets/mail_password.txt
-    touch secrets/indexer_key.txt
+
+    # For Meilisearch (must be at least 16 bytes)
+    openssl rand -base64 32 > secrets/indexer_key.txt
 
     chmod 600 secrets/*.txt
 
@@ -153,6 +155,36 @@ Key settings:
 - ``ZOU_EVENTS_PORT`` - Events port (default: 5001)
 - ``DOMAIN_NAME`` - Your domain for email links
 - ``MAIL_*`` - Email configuration
+
+Storage (Custom Paths)
+~~~~~~~~~~~~~~~~~~~~~~
+
+By default, data is stored in Docker named volumes. To use custom paths (e.g., separate disks), set these in ``.env``:
+
+.. code:: bash
+
+    # PostgreSQL data (use fast SSD)
+    POSTGRES_DATA_PATH=/mnt/ssd/postgres-data
+
+    # Preview files (use large storage)
+    PREVIEWS_PATH=/mnt/storage/zou-previews
+
+    # Temporary files
+    TMP_PATH=/mnt/fast/zou-tmp
+
+    # Plugins
+    PLUGINS_PATH=/path/to/plugins
+
+**Setup directories before starting:**
+
+.. code:: bash
+
+    # Create directories
+    mkdir -p /mnt/ssd/postgres-data /mnt/storage/zou-previews
+
+    # Set ownership (postgres UID=999, zou UID=1000)
+    chown -R 999:999 /mnt/ssd/postgres-data
+    chown -R 1000:1000 /mnt/storage/zou-previews /mnt/fast/zou-tmp
 
 Documentation
 ~~~~~~~~~~~~~

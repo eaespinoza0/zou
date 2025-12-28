@@ -13,7 +13,7 @@ services:
     secrets:
       - db_password
     volumes:
-      - zou-postgres-data:/var/lib/postgresql/data
+      - ${POSTGRES_DATA_PATH:-zou-postgres-data}:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres}"]
       interval: 10s
@@ -79,9 +79,9 @@ services:
       - INDEXER_HOST=${INDEXER_HOST:-}
       - INDEXER_PORT=${INDEXER_PORT:-7700}
     volumes:
-      - zou-previews:/app/previews
-      - zou-tmp:/app/tmp
-      - zou-plugins:/app/plugins
+      - ${PREVIEWS_PATH:-zou-previews}:/app/previews
+      - ${TMP_PATH:-zou-tmp}:/app/tmp
+      - ${PLUGINS_PATH:-zou-plugins}:/app/plugins
     depends_on:
       postgres:
         condition: service_healthy
@@ -152,6 +152,12 @@ services:
       - EVENT_STREAM_PORT=5001
     entrypoint: ["/app/entrypoint.sh"]
     command: ["python", "-m", "zou.event_stream"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
     depends_on:
       postgres:
         condition: service_healthy
