@@ -103,6 +103,31 @@ docker build -t your-registry.com/zou:v1.0.0 .
 docker push your-registry.com/zou:v1.0.0
 ```
 
+### Multiplatform Builds
+
+Build for both AMD64 (Intel/AMD) and ARM64 (Apple Silicon, AWS Graviton):
+
+```bash
+# Create builder (one-time setup)
+docker buildx create --name multiplatform --use
+
+# Build and push multiplatform image
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  -t your-registry.com/zou:v1.0.0 \
+  --push .
+```
+
+To build locally for a specific platform (without pushing):
+
+```bash
+# Build for ARM64 (e.g., on Apple Silicon)
+docker buildx build --platform linux/arm64 -t zou:latest --load .
+
+# Build for AMD64
+docker buildx build --platform linux/amd64 -t zou:latest --load .
+```
+
 ## Using Pre-built Images
 
 Set `ZOU_IMAGE` in `.env`:
