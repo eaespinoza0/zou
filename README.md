@@ -197,28 +197,39 @@ chown -R 1000:1000 /mnt/storage/zou-previews /mnt/fast/zou-tmp
 
 Zou supports SAML 2.0 for Single Sign-On with identity providers like Google Workspace, Okta, or Azure AD.
 
-### 1. Get your IdP metadata URL
+### 1. Get your IdP metadata
 
-From your Identity Provider's admin console, find the SAML metadata URL:
+Download the SAML metadata XML from your Identity Provider's admin console:
 
-- **Google Workspace**: `https://accounts.google.com/o/saml2/metadata?idpid=YOUR_IDP_ID`
-- **Okta**: `https://your-domain.okta.com/app/YOUR_APP_ID/sso/saml/metadata`
-- **Azure AD**: `https://login.microsoftonline.com/TENANT_ID/federationmetadata/2007-06/federationmetadata.xml`
+- **Google Workspace**: Admin Console → Apps → Web and mobile apps → Your SAML App → Download metadata
+- **Okta**: Applications → Your App → Sign On → View IdP metadata
+- **Azure AD**: Enterprise Applications → Your App → Single sign-on → Federation Metadata XML
 
-### 2. Configure environment
+### 2. Add metadata file
+
+Save the metadata XML to the secrets folder:
+
+```bash
+cp /path/to/downloaded-metadata.xml secrets/saml_metadata.xml
+chmod 600 secrets/saml_metadata.xml
+```
+
+### 3. Configure environment
 
 Add to your `.env`:
 
 ```bash
 SAML_ENABLED=true
-SAML_METADATA_URL=https://accounts.google.com/o/saml2/metadata?idpid=YOUR_IDP_ID
+SAML_METADATA_URL=/app/saml/metadata.xml
 SAML_IDP_NAME=Google
 ```
 
-### 3. Restart Zou
+> **Note**: `SAML_METADATA_URL` can also be a URL if your IdP provides one.
+
+### 4. Restart Zou
 
 ```bash
-docker compose restart zou
+docker compose down zou && docker compose up -d zou
 ```
 
 Users will see a "Login with Google" (or your `SAML_IDP_NAME`) button on the login page.

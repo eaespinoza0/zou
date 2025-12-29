@@ -10,20 +10,28 @@ from saml2.config import Config as Saml2Config
 from zou.app import config
 
 
-def saml_client_for(metadata_url):
+def saml_client_for(metadata_source):
     """
-    Given the name of an IdP, return a configuation.
-    The configuration is a hash for use by saml2.config.Config
+    Given a metadata URL or file path, return a SAML client configuration.
+    The metadata_source can be:
+      - A URL (http:// or https://) - fetched via HTTP
+      - A file path (starts with /) - read from local filesystem
     """
     acs_url = (
         f"{config.DOMAIN_PROTOCOL}://{config.DOMAIN_NAME}/api/auth/saml/sso"
     )
 
-    rv = requests.get(metadata_url)
+    # Load metadata from file or URL
+    if metadata_source.startswith("/"):
+        with open(metadata_source, "r") as f:
+            metadata_xml = f.read()
+    else:
+        rv = requests.get(metadata_source)
+        metadata_xml = rv.text
 
     settings = {
         "entityid": f"{config.DOMAIN_PROTOCOL}://{config.DOMAIN_NAME}/api/auth/saml/login",
-        "metadata": {"inline": [rv.text]},
+        "metadata": {"inline": [metadata_xml]},
         "service": {
             "sp": {
                 "endpoints": {

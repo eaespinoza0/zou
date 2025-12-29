@@ -86,6 +86,7 @@ services:
       - ${PREVIEWS_PATH:-zou-previews}:/app/previews
       - ${TMP_PATH:-zou-tmp}:/app/tmp
       - ${PLUGINS_PATH:-zou-plugins}:/app/plugins
+      - ./secrets/saml_metadata.xml:/app/saml/metadata.xml:ro
     depends_on:
       postgres:
         condition: service_healthy
