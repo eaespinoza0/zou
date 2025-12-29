@@ -11,6 +11,7 @@ Zou uses Docker secrets for sensitive credentials. Secrets are stored as files i
 
 3. **mail_password.txt** - SMTP password (if using email)
 4. **indexer_key.txt** - Meilisearch master key (if using search profile)
+5. **saml_idp_certificate.pem** - SAML Identity Provider certificate (if using SSO)
 
 ## Setup
 
@@ -37,11 +38,16 @@ touch secrets/mail_password.txt
 # Create empty file if not using search, or set key if using
 touch secrets/indexer_key.txt
 # OR: openssl rand -hex 32 > secrets/indexer_key.txt
+
+# Optional: SAML IdP certificate (if using SSO)
+# Create empty file if not using SSO, or copy your IdP certificate
+touch secrets/saml_idp_certificate.pem
+# OR: cp /path/to/your-idp-certificate.pem secrets/saml_idp_certificate.pem
 ```
 
 3. Set proper permissions:
 ```bash
-chmod 600 secrets/*.txt
+chmod 600 secrets/*.txt secrets/*.pem
 ```
 
 **Note:** Docker Compose requires all secret files to exist. Create empty files (`touch`) for optional secrets you're not using.

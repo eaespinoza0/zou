@@ -106,4 +106,5 @@ data.ms
 
 # Secrets directory
 secrets/*.txt
+secrets/*.pem
 !secrets/*.example
