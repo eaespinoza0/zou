@@ -168,6 +168,36 @@ chown -R 999:999 /mnt/ssd/postgres-data
 chown -R 1000:1000 /mnt/storage/zou-previews /mnt/fast/zou-tmp
 ```
 
+## SAML/SSO (Optional)
+
+Zou supports SAML 2.0 for Single Sign-On with identity providers like Google Workspace, Okta, or Azure AD.
+
+### 1. Get your IdP metadata URL
+
+From your Identity Provider's admin console, find the SAML metadata URL:
+
+- **Google Workspace**: `https://accounts.google.com/o/saml2/metadata?idpid=YOUR_IDP_ID`
+- **Okta**: `https://your-domain.okta.com/app/YOUR_APP_ID/sso/saml/metadata`
+- **Azure AD**: `https://login.microsoftonline.com/TENANT_ID/federationmetadata/2007-06/federationmetadata.xml`
+
+### 2. Configure environment
+
+Add to your `.env`:
+
+```bash
+SAML_ENABLED=true
+SAML_METADATA_URL=https://accounts.google.com/o/saml2/metadata?idpid=YOUR_IDP_ID
+SAML_IDP_NAME=Google
+```
+
+### 3. Restart Zou
+
+```bash
+docker compose restart zou
+```
+
+Users will see a "Login with Google" (or your `SAML_IDP_NAME`) button on the login page.
+
 ## Documentation
 
 - API Docs: https://zou.cg-wire.com/

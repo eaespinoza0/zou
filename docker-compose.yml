@@ -59,7 +59,6 @@ services:
       - db_password
       - mail_password
       - indexer_key
-      - saml_idp_certificate
     environment:
       - DB_HOST=postgres
       - DB_PORT=5432
@@ -81,13 +80,8 @@ services:
       - INDEXER_PORT=${INDEXER_PORT:-7700}
       # SAML/SSO
       - SAML_ENABLED=${SAML_ENABLED:-false}
-      - SAML_ENTITY_ID=${SAML_ENTITY_ID:-}
-      - SAML_IDP_ENTITY_ID=${SAML_IDP_ENTITY_ID:-}
-      - SAML_IDP_SSO_URL=${SAML_IDP_SSO_URL:-}
-      - SAML_IDP_SLO_URL=${SAML_IDP_SLO_URL:-}
-      - SAML_IDP_CERTIFICATE=/run/secrets/saml_idp_certificate
+      - SAML_METADATA_URL=${SAML_METADATA_URL:-}
       - SAML_IDP_NAME=${SAML_IDP_NAME:-SSO}
-      - SAML_AUTO_CREATE_USER=${SAML_AUTO_CREATE_USER:-false}
     volumes:
       - ${PREVIEWS_PATH:-zou-previews}:/app/previews
       - ${TMP_PATH:-zou-tmp}:/app/tmp
@@ -227,8 +221,6 @@ secrets:
     file: ./secrets/mail_password.txt
   indexer_key:
     file: ./secrets/indexer_key.txt
-  saml_idp_certificate:
-    file: ./secrets/saml_idp_certificate.pem
 
 networks:
   zou-internal:
